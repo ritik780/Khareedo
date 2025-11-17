@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+</head>
+
+<body>
+
+<section id="header">
+  <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
+
+  <div>
+    <ul id="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="about.html">About us</a></li>
+      <li><a href="contact.html">Contact us</a></li>
+      <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
+
+      <!-- Dynamic Cognito Login / Logout -->
+      <li id="authLink"><a href="login.html">Login</a></li>
+    </ul>
+
+  </div>
+</section>
+
+  <section id="cart" class="section-p1">
+    <table width="100%">
+      <thead>
+        <tr>
+          <td>Remove</td>
+          <td>Image</td>
+          <td>Product</td>
+          <td>Price</td>
+          <td>Quantity</td>
+          <td>Total</td>
+        </tr>
+      </thead>
+      <tbody id="cart-body"></tbody>
+    </table>
+  </section>
+
+  <section class="section-p1" id="cart-total">
+    <h3>Cart Total</h3>
+    <h2 id="grand-total">$0</h2>
+  </section>
+
+  <script>
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let html = "";
+      let grand = 0;
+
+      cart.forEach((item, i) => {
+        let total = item.qty * item.price;
+        grand += total;
+
+        html += `
+        <tr>
+            <td><button onclick="removeItem(${i})">X</button></td>
+            <td><img src="${item.img}" width="80"></td>
+            <td>${item.name}</td>
+            <td>$${item.price}</td>
+            <td>
+                <input type="number" value="${item.qty}" min="1" onchange="updateQty(${i}, this.value)">
+            </td>
+            <td>$${total}</td>
+        </tr>
+        `;
+      });
+
+      document.getElementById("cart-body").innerHTML = html;
+      document.getElementById("grand-total").innerText = "$" + grand;
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function updateQty(index, qty) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart[index].qty = parseInt(qty);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    loadCart();
+  </script>
+
+</body>
+
+</html>

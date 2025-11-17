@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Shop</title>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <section id="header">
+    <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
+
+    <div>
+    <ul id="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="about.html">About us</a></li>
+      <li><a href="contact.html">Contact us</a></li>
+      <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
+    
+      <!-- Dynamic Cognito Login / Logout -->
+      <li id="authLink"><a href="login.html">Login</a></li>
+    </ul>
+    </div>
+  </section>
+
+  <!-- HERO BANNER -->
+  <section id="hero">
+    <h2>Shop All Products</h2>
+    <p>Trendy outfits with the best offers!</p>
+  </section>
+
+
+  <!-- MAIN SHOP PRODUCTS -->
+  <section id="Product1" class="section-p1">
+    <h2>Our Products</h2>
+    <p>Find the perfect style!</p>
+
+    <div class="Pro-container">
+
+      <!-- Product 1 -->
+      <div class="pro" onclick="location.href='product.html?id=f1'">
+        <img src="imgs/products/f1.jpg">
+        <div class="des">
+          <span>Adidas</span>
+          <h5>Astrodes T-shirt</h5>
+          <h4>$60</h4>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="pro" onclick="location.href='product.html?id=f2'">
+        <img src="imgs/products/f2.jpg">
+        <div class="des">
+          <span>Fendi</span>
+          <h5>Green Tee</h5>
+          <h4>$56</h4>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="pro" onclick="location.href='product.html?id=f3'">
+        <img src="imgs/products/f3.jpg">
+        <div class="des">
+          <span>Procks</span>
+          <h5>Mustard Tee</h5>
+          <h4>$80</h4>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="pro" onclick="location.href='product.html?id=f4'">
+        <img src="imgs/products/f4.jpg">
+        <div class="des">
+          <span>Adidas</span>
+          <h5>Cupid Rose</h5>
+          <h4>$100</h4>
+        </div>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="pro" onclick="location.href='product.html?id=n1'">
+        <img src="imgs/products/n1.jpg">
+        <div class="des">
+          <span>StyleMe</span>
+          <h5>Plain Blue Tee</h5>
+          <h4>$10</h4>
+        </div>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="pro" onclick="location.href='product.html?id=n4'">
+        <img src="imgs/products/n4.jpg">
+        <div class="des">
+          <span>Adidas</span>
+          <h5>Camo Green</h5>
+          <h4>$50</h4>
+        </div>
+      </div>
+
+      <!-- Product 7 -->
+      <div class="pro" onclick="location.href='product.html?id=n7'">
+        <img src="imgs/products/n7.jpg">
+        <div class="des">
+          <span>Xris</span>
+          <h5>Turmeric Tee</h5>
+          <h4>$40</h4>
+        </div>
+      </div>
+
+      <!-- Product 8 -->
+      <div class="pro" onclick="location.href='product.html?id=n6'">
+        <img src="imgs/products/n6.jpg">
+        <div class="des">
+          <span>Fendi</span>
+          <h5>Shorts</h5>
+          <h4>$30</h4>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="section-p1">
+    <div class="col">
+      <img src="imgs/logo.png" alt="">
+      <h4>Contact</h4>
+      <p><strong>Address:</strong> Lorem ipsum dolor sit amet.</p>
+      <p><strong>Phone:</strong> 91546255522.</p>
+      <p><strong>Hours:</strong> Mon–Sat, 10 AM – 6 PM IST.</p>
+    </div>
+  </footer>
+
+  <script src="login.js"></script>
+
+</body>
+<script>
+  function addToCartFromCard(id) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const exists = cart.find(item => item.id === id);
+    if (exists) {
+      exists.qty++;
+    } else {
+      cart.push({
+        id: id,
+        name: id.toUpperCase(),
+        price: 10,
+        img: "imgs/products/" + id + ".jpg",
+        qty: 1
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to cart!");
+  }
+</script>
+
+</html>
