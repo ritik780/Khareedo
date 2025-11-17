@@ -1,9 +1,10 @@
 // ---------------------------
-// Cognito Config
+// Cognito Config (MUMBAI REGION - PRODUCTION)
 // ---------------------------
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
 
+// Your Vercel root domain
 const redirectUri = "https://khareedo-mg1r.vercel.app/";
 const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/";
 
@@ -66,7 +67,7 @@ async function handleRedirect() {
     localStorage.setItem("refresh_token", data.refresh_token);
   }
 
-  // Remove ?code= from URL
+  // CLEAN URL (remove ?code=...)
   const cleanUrl = window.location.origin + window.location.pathname;
   window.history.replaceState({}, document.title, cleanUrl);
 
@@ -83,13 +84,11 @@ function updateUI() {
   const userDisplay = document.getElementById("userDisplay");
 
   if (idToken) {
-    // User logged in
     if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
+    if (logoutBtn) logoutBtn.style.display = "inline";
     if (userDisplay) userDisplay.textContent = "Logged In";
   } else {
-    // User logged out
-    if (loginBtn) loginBtn.style.display = "inline-block";
+    if (loginBtn) loginBtn.style.display = "inline";
     if (logoutBtn) logoutBtn.style.display = "none";
     if (userDisplay) userDisplay.textContent = "";
   }
