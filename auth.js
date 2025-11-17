@@ -14,9 +14,7 @@ const logoutUrl =
   `${cognitoDomain}/logout?client_id=${clientId}` +
   `&logout_uri=${logoutRedirectUri}`;
 
-// ---------------------------
 // Button Events
-// ---------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -30,18 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
   handleRedirect();
   updateUI();
 });
-
-// --------------------------------
-// Handle Redirect (Auth Code Flow)
-// --------------------------------
+// Handle Redirect 
 async function handleRedirect() {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code");
-
   if (!code) return;
-
   const tokenUrl = `${cognitoDomain}/oauth2/token`;
-
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: clientId,
@@ -63,16 +55,12 @@ async function handleRedirect() {
     localStorage.setItem("refresh_token", data.refresh_token);
   }
 
-  // Remove ?code= from URL
   const cleanUrl = window.location.origin + window.location.pathname;
   window.history.replaceState({}, document.title, cleanUrl);
 
   updateUI();
 }
-
-// ---------------------------
 // Update Navbar UI
-// ---------------------------
 function updateUI() {
   const idToken = localStorage.getItem("id_token");
   const loginBtn = document.getElementById("loginBtn");
@@ -80,14 +68,14 @@ function updateUI() {
   const userDisplay = document.getElementById("userDisplay");
 
   if (idToken) {
-    // User logged in
-    if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
+    // User is logged in
+    loginBtn?.style.setProperty("display", "none", "important");
+    logoutBtn?.style.setProperty("display", "inline-block", "important");
     if (userDisplay) userDisplay.textContent = "Logged In";
   } else {
-    // User logged out
-    if (loginBtn) loginBtn.style.display = "inline-block";
-    if (logoutBtn) logoutBtn.style.display = "none";
+    // User is logged out
+    loginBtn?.style.setProperty("display", "inline-block", "important");
+    logoutBtn?.style.setProperty("display", "none", "important");
     if (userDisplay) userDisplay.textContent = "";
   }
 }
