@@ -8,17 +8,14 @@ const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/index.html";
 
 // Login URL (Hosted UI)
 const loginUrl =
-  `${cognitoDomain}/oauth2/authorize?client_id=${clientId}` +
-  `&response_type=code&scope=openid+email+profile&redirect_uri=${redirectUri}`;
+  `${cognitoDomain}/login?client_id=${clientId}` +
+  `&response_type=token&scope=openid+email+profile&redirect_uri=${redirectUri}`;
 
 // Logout URL
 const logoutUrl =
   `${cognitoDomain}/logout?client_id=${clientId}` +
   `&logout_uri=${logoutRedirectUri}`;
-
-// ---------------------------
 // Button Events
-// ---------------------------
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Auth JS Loaded");
 
@@ -38,26 +35,28 @@ document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 });
 
-// ---------------------------
 // Handle Redirect (Auth Code Flow)
-// ---------------------------
-async function handleRedirect() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
+function handleRedirect() {
+  const hash = window.location.hash; // URL fragment with tokens
 
-  // If user wasn't redirected with a "code", skip
-  if (!code) return;
+  if (!hash.includes("id_token")) return;
 
-  console.log("Received code:", code);
+  const params = new URLSearchParams(hash.replace("#", ""));
 
-  const tokenUrl = `${cognitoDomain}/oauth2/token`;
+  const idToken = params.get("id_token");
+  const accessToken = params.get("access_token");
 
-  const body = new URLSearchParams({
-    grant_type: "authorization_code",
-    client_id: clientId,
-    code: code,
-    redirect_uri: redirectUri
-  });
+  if (idToken) {
+    localStorage.setItem("id_token", idToken);
+    localStorage.setItem("access_token", accessToken);
+
+    // Remove tokens from URL
+    window.location.hash = "";
+  }
+
+  updateUI();
+}
+
 
   const res = await fetch(tokenUrl, {
     method: "POST",
