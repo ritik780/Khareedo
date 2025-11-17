@@ -1,4 +1,6 @@
+// ---------------------------
 // Cognito Config
+// ---------------------------
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
 const redirectUri = "https://khareedo-mg1r.vercel.app/index.html";
@@ -14,13 +16,20 @@ const logoutUrl =
   `${cognitoDomain}/logout?client_id=${clientId}` +
   `&logout_uri=${logoutRedirectUri}`;
 
+// ---------------------------
 // Button Events
+// ---------------------------
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("Auth JS Loaded");
+
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
 
-  if (loginBtn) loginBtn.onclick = () => window.location.href = loginUrl;
-  if (logoutBtn) logoutBtn.onclick = () => {
+  // Login click → Go to Hosted UI
+  loginBtn.onclick = () => window.location.href = loginUrl;
+
+  // Logout click → Clear session + Go to Cognito Logout
+  logoutBtn.onclick = () => {
     localStorage.clear();
     window.location.href = logoutUrl;
   };
@@ -28,12 +37,21 @@ document.addEventListener("DOMContentLoaded", () => {
   handleRedirect();
   updateUI();
 });
-// Handle Redirect 
+
+// ---------------------------
+// Handle Redirect (Auth Code Flow)
+// ---------------------------
 async function handleRedirect() {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code");
+
+  // If user wasn't redirected with a "code", skip
   if (!code) return;
+
+  console.log("Received code:", code);
+
   const tokenUrl = `${cognitoDomain}/oauth2/token`;
+
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: clientId,
@@ -48,19 +66,29 @@ async function handleRedirect() {
   });
 
   const data = await res.json();
+  console.log("Token Response:", data);
 
-  if (data.id_token) {
-    localStorage.setItem("id_token", data.id_token);
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("refresh_token", data.refresh_token);
+  // If token exchange fails, do nothing
+  if (!data.id_token) {
+    console.warn("Token not received");
+    return;
   }
 
-  // const cleanUrl = window.location.origin + window.location.pathname;
-  // window.history.replaceState({}, document.title, cleanUrl);
+  // Save tokens
+  localStorage.setItem("id_token", data.id_token);
+  localStorage.setItem("access_token", data.access_token);
+  localStorage.setItem("refresh_token", data.refresh_token);
+
+  // Remove ?code from the URL
+  const cleanUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
 
   updateUI();
 }
-// Update Navbar UI
+
+// ---------------------------
+// Update Navbar UI (Hide Login / Show Logout)
+// ---------------------------
 function updateUI() {
   const idToken = localStorage.getItem("id_token");
   const loginBtn = document.getElementById("loginBtn");
@@ -68,14 +96,25 @@ function updateUI() {
   const userDisplay = document.getElementById("userDisplay");
 
   if (idToken) {
-    // User is logged in
-    loginBtn?.style.setProperty("display", "none", "important");
-    logoutBtn?.style.setProperty("display", "inline-block", "important");
-    if (userDisplay) userDisplay.textContent = "Logged In";
+    console.log("User Logged In");
+
+    // Hide LOGIN
+    loginBtn.style.setProperty("display", "none", "important");
+
+    // Show LOGOUT
+    logoutBtn.style.setProperty("display", "inline-block", "important");
+
+    userDisplay.textContent = "Logged In";
+
   } else {
-    // User is logged out
-    loginBtn?.style.setProperty("display", "inline-block", "important");
-    logoutBtn?.style.setProperty("display", "none", "important");
-    if (userDisplay) userDisplay.textContent = "";
+    console.log("User Not Logged In");
+
+    // Show LOGIN
+    loginBtn.style.setProperty("display", "inline-block", "important");
+
+    // Hide LOGOUT
+    logoutBtn.style.setProperty("display", "none", "important");
+
+    userDisplay.textContent = "";
   }
 }
