@@ -55,8 +55,8 @@ async function handleRedirect() {
     localStorage.setItem("refresh_token", data.refresh_token);
   }
 
-  const cleanUrl = window.location.origin + window.location.pathname;
-  window.history.replaceState({}, document.title, cleanUrl);
+  // const cleanUrl = window.location.origin + window.location.pathname;
+  // window.history.replaceState({}, document.title, cleanUrl);
 
   updateUI();
 }
