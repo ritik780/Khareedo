@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
   <title>Your Cart</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
@@ -9,25 +10,30 @@
 
 <body>
 
-<section id="header">
-  <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
+  <!-- HEADER -->
+  <section id="header">
+    <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
 
-  <div>
-    <ul id="navbar">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="about.html">About us</a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
+    <div>
+      <ul id="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About us</a></li>
+        <li><a href="contact.html">Contact us</a></li>
 
-      <!-- Dynamic Cognito Login / Logout -->
-      <li id="authLink"><a href="login.html">Login</a></li>
-    </ul>
+        <!-- CART -->
+        <li><a id="cartLink"><i class="fas fa-shopping-bag"></i></a></li>
 
-  </div>
-</section>
+        <!-- AUTH BUTTONS -->
+        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
+        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
+        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
+      </ul>
+    </div>
+  </section>
 
+  <!-- CART CONTENT -->
   <section id="cart" class="section-p1">
     <table width="100%">
       <thead>
@@ -49,12 +55,26 @@
     <h2 id="grand-total">$0</h2>
   </section>
 
- <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+
+  <!-- APPWRITE SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
   <script src="appwrite.js"></script>
+  <script src="auth.js"></script>
 
-</body>
 
-   <script>
+  <script>
+    
+    // BLOCK CART PAGE IF USER LOGGED OUT
+const userId = localStorage.getItem("user");
+
+    if (!userId) {
+      alert("You must be logged in to view your cart.");
+      window.location.href = "index.html";
+    }
+
+
+// LOAD CART FROM LOCALSTORAGE
+    
     function loadCart() {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
       let html = "";
@@ -71,7 +91,7 @@
             <td>${item.name}</td>
             <td>$${item.price}</td>
             <td>
-                <input type="number" value="${item.qty}" min="1" onchange="updateQty(${i}, this.value)">
+              <input type="number" value="${item.qty}" min="1" onchange="updateQty(${i}, this.value)">
             </td>
             <td>$${total}</td>
         </tr>
@@ -82,22 +102,53 @@
       document.getElementById("grand-total").innerText = "$" + grand;
     }
 
-    function removeItem(index) {
+
+   // SAVE CART TO APPWRITE
+ 
+    async function saveCartToAppwrite() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const total = cart.reduce((sum, p) => sum + p.qty * p.price, 0);
+
+      try {
+        await database.createDocument(
+          "691b7aec003c0cfc9c2f", 
+          "carts",                
+          userId,                 
+          {
+            userId: userId,
+            items: JSON.stringify(cart),
+            Total: total
+          }
+        );
+      } catch (err) {
+        console.log("❌ Error saving cart:", err);
+      }
+    }
+
+
+  // REMOVE ITEM
+function removeItem(index) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
+
       loadCart();
+      saveCartToAppwrite(); // 🔄 sync to DB
     }
 
+    
+    // UPDATE QTY
     function updateQty(index, qty) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart[index].qty = parseInt(qty);
+
       localStorage.setItem("cart", JSON.stringify(cart));
       loadCart();
+      saveCartToAppwrite(); // 🔄 sync to DB
     }
 
     loadCart();
   </script>
-<script src="auth.js"></script>
 
+</body>
 </html>
