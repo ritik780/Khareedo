@@ -15,20 +15,25 @@
     <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
 
     <div>
-  <ul id="navbar">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="shop.html">Shop</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="about.html">About us</a></li>
-    <li><a href="contact.html">Contact us</a></li>
-    <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
-  
-    <!-- Dynamic Cognito Login / Logout -->
-<li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
-<li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
-<li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
+      <ul id="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About us</a></li>
+        <li><a href="contact.html" class="active">Contact us</a></li>
 
-  </ul>
+        <!-- Protected Cart -->
+        <li>
+          <a id="cartLink" style="cursor:pointer;">
+            <i class="fas fa-shopping-bag"></i>
+          </a>
+        </li>
+
+        <!-- Cognito Login / Logout -->
+        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
+        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
+        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
+      </ul>
     </div>
   </section>
 
@@ -103,8 +108,8 @@
       <p><strong>Hours:</strong> Mon–Sat, 10 AM – 6 PM IST.</p>
     </div>
   </footer>
+
   <script src="auth.js"></script>
+
 </body>
-
-
 </html>
