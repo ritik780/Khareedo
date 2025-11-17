@@ -3,9 +3,11 @@
 // ---------------------------
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
-const redirectUri = "https://d84l1y8p4kdic.cloudfront.net";
-const logoutRedirectUri = "https://d84l1y8p4kdic.cloudfront.net";
 
+// IMPORTANT: Cognito does NOT accept file paths like /index.html
+// So always use the root domain
+const redirectUri = "https://khareedo-mg1r.vercel.app/";
+const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/";
 
 // Login URL (Hosted UI)
 const loginUrl =
@@ -54,41 +56,4 @@ async function handleRedirect() {
   });
 
   const res = await fetch(tokenUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body
-  });
-
-  const data = await res.json();
-
-  if (data.id_token) {
-    localStorage.setItem("id_token", data.id_token);
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("refresh_token", data.refresh_token);
-  }
-
-  // Remove ?code= from URL
-  window.history.replaceState({}, document.title, redirectUri);
-
-  updateUI();
-}
-
-// ---------------------------
-// Update Navbar UI
-// ---------------------------
-function updateUI() {
-  const idToken = localStorage.getItem("id_token");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const userDisplay = document.getElementById("userDisplay");
-
-  if (idToken) {
-    if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline";
-    if (userDisplay) userDisplay.textContent = "Logged In";
-  } else {
-    if (loginBtn) loginBtn.style.display = "inline";
-    if (logoutBtn) logoutBtn.style.display = "none";
-    if (userDisplay) userDisplay.textContent = "";
-  }
-}
+    metho
