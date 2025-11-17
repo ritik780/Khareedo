@@ -85,3 +85,63 @@ function updateUI() {
     userDisplay.textContent = "";
   }
 }
+
+// ---------------------------
+// Protect Cart Icon Globally
+// ---------------------------
+function protectCartIcon() {
+  const cartLink = document.getElementById("cartLink");
+  if (!cartLink) return;
+
+  cartLink.onclick = () => {
+    const idToken = localStorage.getItem("id_token");
+
+    if (!idToken) {
+      alert("You must be logged in to view your cart.");
+      window.location.href = loginUrl;
+    } else {
+      window.location.href = "cart.html";
+    }
+  };
+}
+
+// ---------------------------
+function protectAddToCartButtons() {
+  const idToken = localStorage.getItem("id_token");
+  const buttons = document.querySelectorAll(".addToCartBtn");
+
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      if (!idToken) {
+        alert("Please log in to add items to the cart.");
+        window.location.href = loginUrl;
+        return;
+      }
+
+      const id = btn.dataset.id;
+      addToCartFromCard(id);
+    };
+  });
+}
+
+// Run protection every time UI updates
+function updateUI() {
+  const idToken = localStorage.getItem("id_token");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const userDisplay = document.getElementById("userDisplay");
+
+  if (idToken) {
+    loginBtn.style.setProperty("display", "none", "important");
+    logoutBtn.style.setProperty("display", "inline-block", "important");
+    userDisplay.textContent = "Logged In";
+  } else {
+    loginBtn.style.setProperty("display", "inline-block", "important");
+    logoutBtn.style.setProperty("display", "none", "important");
+    userDisplay.textContent = "";
+  }
+
+  protectCartIcon();
+  protectAddToCartButtons();
+}
+
