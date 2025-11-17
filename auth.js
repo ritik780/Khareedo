@@ -1,11 +1,8 @@
-// ---------------------------
 // Cognito Config
-// ---------------------------
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
-
-const redirectUri = "https://khareedo-mg1r.vercel.app/";
-const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/";
+const redirectUri = "https://khareedo-mg1r.vercel.app/index.html";
+const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/index.html";
 
 // Login URL (Hosted UI)
 const loginUrl =
