@@ -19,16 +19,21 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="shop.html">Shop</a></li>
         <li><a href="blog.html">Blog</a></li>
-        <li><a href="about.html">About us</a></li>
+        <li><a href="about.html" class="active">About us</a></li>
         <li><a href="contact.html">Contact us</a></li>
-        <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
-      
-      <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
-      <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
-      <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
 
+        <!-- Protected Cart -->
+        <li>
+          <a id="cartLink" style="cursor:pointer;">
+            <i class="fas fa-shopping-bag"></i>
+          </a>
+        </li>
+
+        <!-- Cognito Login / Logout -->
+        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
+        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
+        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
       </ul>
-
     </div>
   </section>
 
@@ -63,7 +68,7 @@
     </div>
   </section>
 
-  <!-- ABOUT FEATURES / STATS -->
+  <!-- ABOUT FEATURES -->
   <section id="about-app" class="section-p1">
     <h2>Why Shop With Us?</h2>
     <div class="about-features">
@@ -93,7 +98,7 @@
     </div>
   </footer>
 
-<script src="auth.js"></script>
-</body>
+  <script src="auth.js"></script>
 
+</body>
 </html>
