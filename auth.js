@@ -4,8 +4,7 @@
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
 
-// IMPORTANT: Cognito does NOT accept file paths like /index.html
-// So always use the root domain
+// Your Vercel root domain
 const redirectUri = "https://khareedo-mg1r.vercel.app/";
 const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/";
 
@@ -45,7 +44,6 @@ async function handleRedirect() {
 
   if (!code) return;
 
-  // Exchange code for tokens
   const tokenUrl = `${cognitoDomain}/oauth2/token`;
 
   const body = new URLSearchParams({
@@ -56,4 +54,42 @@ async function handleRedirect() {
   });
 
   const res = await fetch(tokenUrl, {
-    metho
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+
+  const data = await res.json();
+
+  if (data.id_token) {
+    localStorage.setItem("id_token", data.id_token);
+    localStorage.setItem("access_token", data.access_token);
+    localStorage.setItem("refresh_token", data.refresh_token);
+  }
+
+  // CLEAN URL (remove ?code=...)
+  const cleanUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
+
+  updateUI();
+}
+
+// ---------------------------
+// Update Navbar UI
+// ---------------------------
+function updateUI() {
+  const idToken = localStorage.getItem("id_token");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const userDisplay = document.getElementById("userDisplay");
+
+  if (idToken) {
+    if (loginBtn) loginBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline";
+    if (userDisplay) userDisplay.textContent = "Logged In";
+  } else {
+    if (loginBtn) loginBtn.style.display = "inline";
+    if (logoutBtn) logoutBtn.style.display = "none";
+    if (userDisplay) userDisplay.textContent = "";
+  }
+}
