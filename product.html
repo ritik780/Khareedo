@@ -21,10 +21,19 @@
         <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About us</a></li>
         <li><a href="contact.html">Contact us</a></li>
-        <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
-      
-        <!-- Dynamic Cognito Login / Logout -->
-        <li id="authLink"><a href="login.html">Login</a></li>
+
+        <!-- PROTECTED CART ICON -->
+        <li>
+          <a id="cartLink" style="cursor:pointer;">
+            <i class="fas fa-shopping-bag"></i>
+          </a>
+        </li>
+
+        <!-- Cognito Login / Logout -->
+        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
+        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
+        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
+
       </ul>
     </div>
   </section>
@@ -41,12 +50,10 @@
     <!-- left image -->
     <div class="single-pro-image">
       <img src="" width="100%" id="MainImg" alt="Product">
-
-      <!-- dynamic gallery -->
       <div class="small-img-group" id="gallery"></div>
     </div>
 
-    <!-- right side text -->
+    <!-- right side -->
     <div class="single-pro-details">
       <h6 id="p-brand"></h6>
       <h4 id="p-name"></h4>
@@ -61,12 +68,14 @@
       </select>
 
       <input type="number" value="1">
-      <button class="normal" onclick="addToCart()">Add to Cart</button>
 
+      <!-- PROTECTED ADD TO CART -->
+      <button class="normal" onclick="addToCart()">Add to Cart</button>
 
       <h4>Product Details</h4>
       <span id="p-desc"></span>
     </div>
+
   </section>
 
   <!-- RELATED PRODUCTS -->
@@ -75,7 +84,6 @@
     <p>You may also like</p>
 
     <div class="Pro-container">
-
       <div class="pro" onclick="location.href='product.html?id=f2'">
         <img src="imgs/products/f2.jpg" alt="">
         <div class="des">
@@ -111,7 +119,6 @@
           <h4>$40</h4>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -127,260 +134,116 @@
   </footer>
 
 
-
-  <!-- DYNAMIC PRODUCT SCRIPT -->
+<!-- ------------------ PRODUCT DATA + LOADER ------------------ -->
 <script>
-
   const productData = {
-
-    /* ------------------ FEATURED PRODUCTS ------------------ */
-
-    f1: {
-      name: "Astrodes T-Shirt",
-      brand: "Adidas",
-      price: "$60",
-      img: "imgs/products/f1.jpg",
-      gallery: [
-        "imgs/products/f1.jpg",
-        "imgs/products/f2.jpg",
-        "imgs/products/f3.jpg"
-      ],
-      desc: "Soft cotton fabric, breathable and stylish."
+    f1:{name:"Astrodes T-Shirt",brand:"Adidas",price:"$60",img:"imgs/products/f1.jpg",
+      gallery:["imgs/products/f1.jpg","imgs/products/f2.jpg","imgs/products/f3.jpg"],
+      desc:"Soft cotton fabric, breathable and stylish."
+    },
+    f2:{name:"Trendy Green",brand:"Fendi",price:"$56",img:"imgs/products/f2.jpg",
+      gallery:["imgs/products/f2.jpg","imgs/products/f1.jpg","imgs/products/f3.jpg"],
+      desc:"Lightweight green T-shirt with premium comfort."
+    },
+    f3:{name:"Mustard Yellow T-Shirt",brand:"Procks",price:"$80",img:"imgs/products/f3.jpg",
+      gallery:["imgs/products/f3.jpg","imgs/products/f4.jpg","imgs/products/f5.jpg"],
+      desc:"Premium mustard color tee, perfect for casual outings."
+    },
+    f4:{name:"Cupid Rose",brand:"Adidas",price:"$100",img:"imgs/products/f4.jpg",
+      gallery:["imgs/products/f4.jpg","imgs/products/f1.jpg","imgs/products/f2.jpg"],
+      desc:"Stylish pink-toned T-shirt with modern fit."
+    },
+    f5:{name:"Nike Trunks",brand:"Nike",price:"$75",img:"imgs/products/f5.jpg",
+      gallery:["imgs/products/f5.jpg","imgs/products/f6.jpg","imgs/products/f3.jpg"],
+      desc:"Lightweight and durable sports trunk."
+    },
+    f6:{name:"Mixed T-Shirts Pack",brand:"Fendi",price:"$80",img:"imgs/products/f6.jpg",
+      gallery:["imgs/products/f6.jpg","imgs/products/f1.jpg","imgs/products/f2.jpg"],
+      desc:"Combo pack of mixed designer T-shirts."
+    },
+    f7:{name:"Bottom Stylers",brand:"Gucci",price:"$60",img:"imgs/products/f7.jpg",
+      gallery:["imgs/products/f7.jpg","imgs/products/f6.jpg","imgs/products/f5.jpg"],
+      desc:"High-quality comfy bottom wear."
+    },
+    f8:{name:"Cult Classic",brand:"Adidas",price:"$40",img:"imgs/products/f8.jpg",
+      gallery:["imgs/products/f8.jpg","imgs/products/f7.jpg","imgs/products/f6.jpg"],
+      desc:"Classic T-shirt with evergreen design."
     },
 
-    f2: {
-      name: "Trendy Green",
-      brand: "Fendi",
-      price: "$56",
-      img: "imgs/products/f2.jpg",
-      gallery: [
-        "imgs/products/f2.jpg",
-        "imgs/products/f1.jpg",
-        "imgs/products/f3.jpg"
-      ],
-      desc: "Lightweight green T-shirt with premium comfort."
+    /* NEW ARRIVALS */
+    n1:{name:"Plain Blue Tee",brand:"StyleMe",price:"$10",img:"imgs/products/n1.jpg",
+      gallery:["imgs/products/n1.jpg","imgs/products/n2.jpg"],
+      desc:"Minimal design, super comfortable."
     },
-
-    f3: {
-      name: "Mustard Yellow T-Shirt",
-      brand: "Procks",
-      price: "$80",
-      img: "imgs/products/f3.jpg",
-      gallery: [
-        "imgs/products/f3.jpg",
-        "imgs/products/f4.jpg",
-        "imgs/products/f5.jpg"
-      ],
-      desc: "Premium mustard color tee, perfect for casual outings."
+    n2:{name:"Fits Best",brand:"Fendi",price:"$56",img:"imgs/products/n2.jpg",
+      gallery:["imgs/products/n2.jpg","imgs/products/n1.jpg"],
+      desc:"A best-fit casual T-shirt for daily wear."
     },
-
-    f4: {
-      name: "Cupid Rose",
-      brand: "Adidas",
-      price: "$100",
-      img: "imgs/products/f4.jpg",
-      gallery: [
-        "imgs/products/f4.jpg",
-        "imgs/products/f1.jpg",
-        "imgs/products/f2.jpg"
-      ],
-      desc: "Stylish pink-toned T-shirt with modern fit."
+    n3:{name:"Off-White Formal Shirt",brand:"Funks",price:"$25",img:"imgs/products/n3.jpg",
+      gallery:["imgs/products/n3.jpg","imgs/products/n4.jpg"],
+      desc:"Premium off-white shirt perfect for semi-formal events."
     },
-
-    f5: {
-      name: "Nike Trunks",
-      brand: "Nike",
-      price: "$75",
-      img: "imgs/products/f5.jpg",
-      gallery: [
-        "imgs/products/f5.jpg",
-        "imgs/products/f6.jpg",
-        "imgs/products/f3.jpg"
-      ],
-      desc: "Lightweight and durable sports trunk."
+    n4:{name:"Camo Green Shirt",brand:"Adidas",price:"$50",img:"imgs/products/n4.jpg",
+      gallery:["imgs/products/n4.jpg","imgs/products/n6.jpg"],
+      desc:"Military-style green casual shirt."
     },
-
-    f6: {
-      name: "Mixed T-Shirts Pack",
-      brand: "Fendi",
-      price: "$80",
-      img: "imgs/products/f6.jpg",
-      gallery: [
-        "imgs/products/f6.jpg",
-        "imgs/products/f1.jpg",
-        "imgs/products/f2.jpg"
-      ],
-      desc: "Combo pack of mixed designer T-shirts."
+    n5:{name:"Denim Blue Tee",brand:"Denim",price:"$75",img:"imgs/products/n5.jpg",
+      gallery:["imgs/products/n5.jpg","imgs/products/n1.jpg"],
+      desc:"Blue denim-styled casual T-shirt."
     },
-
-    f7: {
-      name: "Bottom Stylers",
-      brand: "Gucci",
-      price: "$60",
-      img: "imgs/products/f7.jpg",
-      gallery: [
-        "imgs/products/f7.jpg",
-        "imgs/products/f6.jpg",
-        "imgs/products/f5.jpg"
-      ],
-      desc: "High-quality comfy bottom wear."
+    n6:{name:"Fendi Shorts",brand:"Fendi",price:"$30",img:"imgs/products/n6.jpg",
+      gallery:["imgs/products/n6.jpg","imgs/products/n7.jpg"],
+      desc:"Comfortable sports shorts with breathable fabric."
     },
-
-    f8: {
-      name: "Cult Classic",
-      brand: "Adidas",
-      price: "$40",
-      img: "imgs/products/f8.jpg",
-      gallery: [
-        "imgs/products/f8.jpg",
-        "imgs/products/f7.jpg",
-        "imgs/products/f6.jpg"
-      ],
-      desc: "Classic T-shirt with evergreen design."
+    n7:{name:"Turmeric-Yellow Tee",brand:"Xris",price:"$40",img:"imgs/products/n7.jpg",
+      gallery:["imgs/products/n7.jpg","imgs/products/n8.jpg"],
+      desc:"Bright colored T-shirt with soft cotton fabric."
     },
-
-
-    /* ------------------ NEW ARRIVALS ------------------ */
-
-    n1: {
-      name: "Plain Blue Tee",
-      brand: "StyleMe",
-      price: "$10",
-      img: "imgs/products/n1.jpg",
-      gallery: [
-        "imgs/products/n1.jpg",
-        "imgs/products/n2.jpg"
-      ],
-      desc: "Minimal design, super comfortable."
-    },
-
-    n2: {
-      name: "Fits Best",
-      brand: "Fendi",
-      price: "$56",
-      img: "imgs/products/n2.jpg",
-      gallery: [
-        "imgs/products/n2.jpg",
-        "imgs/products/n1.jpg"
-      ],
-      desc: "A best-fit casual T-shirt for daily wear."
-    },
-
-    n3: {
-      name: "Off-White Formal Shirt",
-      brand: "Funks",
-      price: "$25",
-      img: "imgs/products/n3.jpg",
-      gallery: [
-        "imgs/products/n3.jpg",
-        "imgs/products/n4.jpg"
-      ],
-      desc: "Premium off-white shirt perfect for semi-formal events."
-    },
-
-    n4: {
-      name: "Camo Green Shirt",
-      brand: "Adidas",
-      price: "$50",
-      img: "imgs/products/n4.jpg",
-      gallery: [
-        "imgs/products/n4.jpg",
-        "imgs/products/n6.jpg"
-      ],
-      desc: "Military-style green casual shirt."
-    },
-
-    n5: {
-      name: "Denim Blue Tee",
-      brand: "Denim",
-      price: "$75",
-      img: "imgs/products/n5.jpg",
-      gallery: [
-        "imgs/products/n5.jpg",
-        "imgs/products/n1.jpg"
-      ],
-      desc: "Blue denim-styled casual T-shirt."
-    },
-
-    n6: {
-      name: "Fendi Shorts",
-      brand: "Fendi",
-      price: "$30",
-      img: "imgs/products/n6.jpg",
-      gallery: [
-        "imgs/products/n6.jpg",
-        "imgs/products/n7.jpg"
-      ],
-      desc: "Comfortable sports shorts with breathable fabric."
-    },
-
-    n7: {
-      name: "Turmeric-Yellow Tee",
-      brand: "Xris",
-      price: "$40",
-      img: "imgs/products/n7.jpg",
-      gallery: [
-        "imgs/products/n7.jpg",
-        "imgs/products/n8.jpg"
-      ],
-      desc: "Bright colored T-shirt with soft cotton fabric."
-    },
-
-    n8: {
-      name: "Classic Black Tee",
-      brand: "Adidas",
-      price: "$40",
-      img: "imgs/products/n8.jpg",
-      gallery: [
-        "imgs/products/n8.jpg",
-        "imgs/products/n7.jpg"
-      ],
-      desc: "Timeless black T-shirt with premium finish."
+    n8:{name:"Classic Black Tee",brand:"Adidas",price:"$40",img:"imgs/products/n8.jpg",
+      gallery:["imgs/products/n8.jpg","imgs/products/n7.jpg"],
+      desc:"Timeless black T-shirt with premium finish."
     }
   };
 
-
-
-  /* ------------------ DYNAMIC LOADER ------------------ */
-
+  // Load product
   const id = new URLSearchParams(window.location.search).get("id");
   const product = productData[id];
 
-  // Main image
   document.getElementById("MainImg").src = product.img;
-
-  // Text
   document.getElementById("p-name").innerText = product.name;
   document.getElementById("p-brand").innerText = product.brand;
   document.getElementById("p-price").innerText = product.price;
   document.getElementById("p-desc").innerText = product.desc;
 
-  // Gallery
   const galleryContainer = document.getElementById("gallery");
-  galleryContainer.innerHTML = "";
+  galleryContainer.innerHTML = product.gallery.map(src => `
+    <div class="small-img-col">
+      <img src="${src}" class="small-img" width="100%">
+    </div>
+  `).join("");
 
-  product.gallery.forEach(src => {
-    galleryContainer.innerHTML += `
-      <div class="small-img-col">
-        <img src="${src}" width="100%" class="small-img">
-      </div>
-    `;
-  });
-
-  // swap
   setTimeout(() => {
-    const smallImgs = document.querySelectorAll(".small-img");
-    const MainImg = document.getElementById("MainImg");
-    smallImgs.forEach(img => img.onclick = () => MainImg.src = img.src);
+    document.querySelectorAll(".small-img").forEach(img => {
+      img.onclick = () => document.getElementById("MainImg").src = img.src;
+    });
   }, 200);
-
 </script>
+
+
+<!-- ------------------ PROTECTED ADD TO CART ------------------ -->
 <script>
   function addToCart() {
+    const idToken = localStorage.getItem("id_token");
+
+    if (!idToken) {
+      alert("Please login to add items to the cart.");
+      window.location.href = loginUrl;
+      return;
+    }
+
     const id = new URLSearchParams(window.location.search).get("id");
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // if product already exists, increase qty
     const exists = cart.find(item => item.id === id);
     if (exists) {
       exists.qty++;
@@ -388,7 +251,7 @@
       cart.push({
         id: id,
         name: productData[id].name,
-        price: productData[id].price.replace("$", ""),
+        price: productData[id].price.replace("$",""),
         img: productData[id].img,
         qty: 1
       });
@@ -399,7 +262,8 @@
   }
 </script>
 
+<!-- AUTH SCRIPT -->
 <script src="auth.js"></script>
-</body>
 
+</body>
 </html>
