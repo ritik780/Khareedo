@@ -15,17 +15,25 @@
     <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
 
     <div>
-    <ul id="navbar">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="about.html">About us</a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
-    
-      <!-- Dynamic Cognito Login / Logout -->
-      <li id="authLink"><a href="login.html">Login</a></li>
-    </ul>
+      <ul id="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About us</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+
+        <!-- Protected Cart -->
+        <li>
+          <a id="cartLink" style="cursor:pointer;">
+            <i class="fas fa-shopping-bag"></i>
+          </a>
+        </li>
+
+        <!-- Cognito Login / Logout -->
+        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
+        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
+        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
+      </ul>
     </div>
   </section>
 
@@ -34,7 +42,6 @@
     <h2>Shop All Products</h2>
     <p>Trendy outfits with the best offers!</p>
   </section>
-
 
   <!-- MAIN SHOP PRODUCTS -->
   <section id="Product1" class="section-p1">
@@ -53,7 +60,6 @@
         </div>
       </div>
 
-      <!-- Product 2 -->
       <div class="pro" onclick="location.href='product.html?id=f2'">
         <img src="imgs/products/f2.jpg">
         <div class="des">
@@ -63,7 +69,6 @@
         </div>
       </div>
 
-      <!-- Product 3 -->
       <div class="pro" onclick="location.href='product.html?id=f3'">
         <img src="imgs/products/f3.jpg">
         <div class="des">
@@ -73,7 +78,6 @@
         </div>
       </div>
 
-      <!-- Product 4 -->
       <div class="pro" onclick="location.href='product.html?id=f4'">
         <img src="imgs/products/f4.jpg">
         <div class="des">
@@ -83,7 +87,6 @@
         </div>
       </div>
 
-      <!-- Product 5 -->
       <div class="pro" onclick="location.href='product.html?id=n1'">
         <img src="imgs/products/n1.jpg">
         <div class="des">
@@ -93,7 +96,6 @@
         </div>
       </div>
 
-      <!-- Product 6 -->
       <div class="pro" onclick="location.href='product.html?id=n4'">
         <img src="imgs/products/n4.jpg">
         <div class="des">
@@ -103,7 +105,6 @@
         </div>
       </div>
 
-      <!-- Product 7 -->
       <div class="pro" onclick="location.href='product.html?id=n7'">
         <img src="imgs/products/n7.jpg">
         <div class="des">
@@ -113,7 +114,6 @@
         </div>
       </div>
 
-      <!-- Product 8 -->
       <div class="pro" onclick="location.href='product.html?id=n6'">
         <img src="imgs/products/n6.jpg">
         <div class="des">
@@ -126,7 +126,6 @@
     </div>
   </section>
 
-
   <!-- FOOTER -->
   <footer class="section-p1">
     <div class="col">
@@ -138,29 +137,8 @@
     </div>
   </footer>
 
-  <script src="login.js"></script>
-<script src="auth.js"></script>
+  <!-- IMPORTANT: Only auth.js needed -->
+  <script src="auth.js"></script>
+
 </body>
-<script>
-  function addToCartFromCard(id) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const exists = cart.find(item => item.id === id);
-    if (exists) {
-      exists.qty++;
-    } else {
-      cart.push({
-        id: id,
-        name: id.toUpperCase(),
-        price: 10,
-        img: "imgs/products/" + id + ".jpg",
-        qty: 1
-      });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
-  }
-</script>
-
 </html>
