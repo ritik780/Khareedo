@@ -1,12 +1,10 @@
-// ---------------------------
-// Cognito Config (Implicit Flow)
-// ---------------------------
+// Cognito Config 
 const cognitoDomain = "https://ap-south-1fvvlxxice.auth.ap-south-1.amazoncognito.com";
 const clientId = "6qkh51q7pgpmo1jj3icemn3p6g";
 const redirectUri = "https://khareedo-mg1r.vercel.app/index.html";
 const logoutRedirectUri = "https://khareedo-mg1r.vercel.app/index.html";
 
-// Login URL (Hosted UI with implicit flow)
+// Login URL 
 const loginUrl =
   `${cognitoDomain}/login?client_id=${clientId}` +
   `&response_type=token&scope=openid+email+profile&redirect_uri=${redirectUri}`;
@@ -15,10 +13,7 @@ const loginUrl =
 const logoutUrl =
   `${cognitoDomain}/logout?client_id=${clientId}` +
   `&logout_uri=${logoutRedirectUri}`;
-
-// ---------------------------
 // Button Events
-// ---------------------------
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Auth JS Loaded");
 
@@ -36,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 });
 
-// ---------------------------
-// Handle Redirect (Implicit Flow)
-// ---------------------------
+// Handle Redirect 
 function handleRedirect() {
   const hash = window.location.hash;
 
@@ -59,36 +52,7 @@ function handleRedirect() {
   updateUI();
 }
 
-// ---------------------------
-// Update Navbar UI
-// ---------------------------
-function updateUI() {
-  const idToken = localStorage.getItem("id_token");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const userDisplay = document.getElementById("userDisplay");
-
-  if (idToken) {
-    console.log("User Logged In");
-
-    loginBtn.style.setProperty("display", "none", "important");
-    logoutBtn.style.setProperty("display", "inline-block", "important");
-
-    userDisplay.textContent = "Logged In";
-
-  } else {
-    console.log("User Not Logged In");
-
-    loginBtn.style.setProperty("display", "inline-block", "important");
-    logoutBtn.style.setProperty("display", "none", "important");
-
-    userDisplay.textContent = "";
-  }
-}
-
-// ---------------------------
 // Protect Cart Icon Globally
-// ---------------------------
 function protectCartIcon() {
   const cartLink = document.getElementById("cartLink");
   if (!cartLink) return;
@@ -105,7 +69,7 @@ function protectCartIcon() {
   };
 }
 
-// ---------------------------
+// Protect Add-to-Cart Buttons
 function protectAddToCartButtons() {
   const idToken = localStorage.getItem("id_token");
   const buttons = document.querySelectorAll(".addToCartBtn");
@@ -124,7 +88,7 @@ function protectAddToCartButtons() {
   });
 }
 
-// Run protection every time UI updates
+// FINAL updateUI()
 function updateUI() {
   const idToken = localStorage.getItem("id_token");
   const loginBtn = document.getElementById("loginBtn");
@@ -132,16 +96,19 @@ function updateUI() {
   const userDisplay = document.getElementById("userDisplay");
 
   if (idToken) {
+    console.log("User Logged In");
+
     loginBtn.style.setProperty("display", "none", "important");
     logoutBtn.style.setProperty("display", "inline-block", "important");
     userDisplay.textContent = "Logged In";
+
   } else {
+    console.log("User Not Logged In");
+
     loginBtn.style.setProperty("display", "inline-block", "important");
     logoutBtn.style.setProperty("display", "none", "important");
     userDisplay.textContent = "";
   }
-
   protectCartIcon();
   protectAddToCartButtons();
 }
-
