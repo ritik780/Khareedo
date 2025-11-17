@@ -23,7 +23,12 @@
         <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About us</a></li>
         <li><a href="contact.html">Contact us</a></li>
-        <li><a href="cart.html"><i class="fas fa-shopping-bag"></i></a></li>
+       <li>
+  <a id="cartLink" style="cursor:pointer;">
+    <i class="fas fa-shopping-bag"></i>
+  </a>
+</li>
+
       
         <!-- Dynamic Cognito Login / Logout -->
     <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
@@ -290,11 +295,37 @@
     </div>
   </footer>
 
-  <script src="login.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cartLink = document.getElementById("cartLink");
+
+    cartLink.onclick = () => {
+      const idToken = localStorage.getItem("id_token");
+
+      if (!idToken) {
+        alert("You must be logged in to view the cart.");
+        window.location.href = loginUrl;
+      } else {
+        window.location.href = "cart.html";
+      }
+    };
+  });
+</script>
+
 
 </body>
 <script>
   function addToCartFromCard(id) {
+
+    const idToken = localStorage.getItem("id_token");
+
+    // If NOT logged in → block cart
+    if (!idToken) {
+      alert("Please login to add items to your cart.");
+      window.location.href = loginUrl; // Redirect to Cognito login
+      return;
+    }
+
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     const exists = cart.find(item => item.id === id);
@@ -314,6 +345,7 @@
     alert("Added to cart!");
   }
 </script>
+
 
 <script src="auth.js"></script>
 
