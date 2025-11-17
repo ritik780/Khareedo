@@ -295,57 +295,7 @@
     </div>
   </footer>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const cartLink = document.getElementById("cartLink");
-
-    cartLink.onclick = () => {
-      const idToken = localStorage.getItem("id_token");
-
-      if (!idToken) {
-        alert("You must be logged in to view the cart.");
-        window.location.href = loginUrl;
-      } else {
-        window.location.href = "cart.html";
-      }
-    };
-  });
-</script>
-
-
 </body>
-<script>
-  function addToCartFromCard(id) {
-
-    const idToken = localStorage.getItem("id_token");
-
-    // If NOT logged in → block cart
-    if (!idToken) {
-      alert("Please login to add items to your cart.");
-      window.location.href = loginUrl; // Redirect to Cognito login
-      return;
-    }
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const exists = cart.find(item => item.id === id);
-    if (exists) {
-      exists.qty++;
-    } else {
-      cart.push({
-        id: id,
-        name: id.toUpperCase(),
-        price: 10,
-        img: "imgs/products/" + id + ".jpg",
-        qty: 1
-      });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
-  }
-</script>
-
 
 <script src="auth.js"></script>
 
