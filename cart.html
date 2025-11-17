@@ -1,154 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
+<script>
+  // BLOCK CART PAGE IF LOGGED OUT
+  const userId = localStorage.getItem("user");
 
-<head>
-  <meta charset="UTF-8">
-  <title>Your Cart</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
-</head>
+  if (!userId) {
+    alert("You must be logged in to view your cart.");
+    window.location.href = "index.html";
+  }
 
-<body>
+  // Appwrite Config
+  const DB_ID = "691b7aec003c0cfc9c2f";  // your database ID
+  const COLLECTION_ID = "carts";         // your collection ID (leave if correct)
 
-  <!-- HEADER -->
-  <section id="header">
-    <a href="index.html"><img src="imgs/logo.png" class="logo" alt=""></a>
+  // LOAD CART
+  function loadCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let html = "";
+    let grand = 0;
 
-    <div>
-      <ul id="navbar">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="blog.html">Blog</a></li>
-        <li><a href="about.html">About us</a></li>
-        <li><a href="contact.html">Contact us</a></li>
+    cart.forEach((item, i) => {
+      let total = item.qty * item.price;
+      grand += total;
 
-        <!-- CART -->
-        <li><a id="cartLink"><i class="fas fa-shopping-bag"></i></a></li>
+      html += `
+      <tr>
+          <td><button onclick="removeItem(${i})">X</button></td>
+          <td><img src="${item.img}" width="80"></td>
+          <td>${item.name}</td>
+          <td>$${item.price}</td>
+          <td><input type="number" value="${item.qty}" min="1" onchange="updateQty(${i}, this.value)"></td>
+          <td>$${total}</td>
+      </tr>
+      `;
+    });
 
-        <!-- AUTH BUTTONS -->
-        <li><a id="loginBtn" style="cursor:pointer;">Login</a></li>
-        <li><a id="logoutBtn" style="cursor:pointer; display:none;">Logout</a></li>
-        <li id="userDisplay" style="margin-left:15px; font-weight:bold;"></li>
-      </ul>
-    </div>
-  </section>
+    document.getElementById("cart-body").innerHTML = html;
+    document.getElementById("grand-total").innerText = "$" + grand;
+  }
 
-  <!-- CART CONTENT -->
-  <section id="cart" class="section-p1">
-    <table width="100%">
-      <thead>
-        <tr>
-          <td>Remove</td>
-          <td>Image</td>
-          <td>Product</td>
-          <td>Price</td>
-          <td>Quantity</td>
-          <td>Total</td>
-        </tr>
-      </thead>
-      <tbody id="cart-body"></tbody>
-    </table>
-  </section>
+  // SAVE CART TO APPWRITE
+  async function saveCartToAppwrite() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const total = cart.reduce((sum, p) => sum + p.qty * p.price, 0);
 
-  <section class="section-p1" id="cart-total">
-    <h3>Cart Total</h3>
-    <h2 id="grand-total">$0</h2>
-  </section>
-
-
-  <!-- APPWRITE SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
-  <script src="appwrite.js"></script>
-  <script src="auth.js"></script>
-
-
-  <script>
-    
-    // BLOCK CART PAGE IF USER LOGGED OUT
-const userId = localStorage.getItem("user");
-
-    if (!userId) {
-      alert("You must be logged in to view your cart.");
-      window.location.href = "index.html";
+    try {
+      // First try to update
+      await databases.updateDocument(
+        DB_ID,
+        COLLECTION_ID,
+        userId,
+        {
+          userId,
+          items: JSON.stringify(cart),
+          Total: total
+        }
+      );
+    } catch (err) {
+      // If document does not exist → create one
+      await databases.createDocument(
+        DB_ID,
+        COLLECTION_ID,
+        userId,
+        {
+          userId,
+          items: JSON.stringify(cart),
+          Total: total
+        }
+      );
     }
-
-
-// LOAD CART FROM LOCALSTORAGE
-    
-    function loadCart() {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      let html = "";
-      let grand = 0;
-
-      cart.forEach((item, i) => {
-        let total = item.qty * item.price;
-        grand += total;
-
-        html += `
-        <tr>
-            <td><button onclick="removeItem(${i})">X</button></td>
-            <td><img src="${item.img}" width="80"></td>
-            <td>${item.name}</td>
-            <td>$${item.price}</td>
-            <td>
-              <input type="number" value="${item.qty}" min="1" onchange="updateQty(${i}, this.value)">
-            </td>
-            <td>$${total}</td>
-        </tr>
-        `;
-      });
-
-      document.getElementById("cart-body").innerHTML = html;
-      document.getElementById("grand-total").innerText = "$" + grand;
-    }
-
-
-   // SAVE CART TO APPWRITE
- 
-    async function saveCartToAppwrite() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const total = cart.reduce((sum, p) => sum + p.qty * p.price, 0);
-
-      try {
-        await database.createDocument(
-          "691b7aec003c0cfc9c2f", 
-          "carts",                
-          userId,                 
-          {
-            userId: userId,
-            items: JSON.stringify(cart),
-            Total: total
-          }
-        );
-      } catch (err) {
-        console.log("❌ Error saving cart:", err);
-      }
-    }
-
+  }
 
   // REMOVE ITEM
-function removeItem(index) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
+  function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
 
-      loadCart();
-      saveCartToAppwrite(); 
-    }
-
-    
-    // UPDATE QTY
-    function updateQty(index, qty) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart[index].qty = parseInt(qty);
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-      loadCart();
-      saveCartToAppwrite(); 
-    }
-
+    localStorage.setItem("cart", JSON.stringify(cart));
     loadCart();
-  </script>
+    saveCartToAppwrite();
+  }
 
-</body>
-</html>
+  // UPDATE QTY
+  function updateQty(index, qty) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].qty = parseInt(qty);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+    saveCartToAppwrite();
+  }
+
+  // INITIAL LOAD
+  loadCart();
+</script>
